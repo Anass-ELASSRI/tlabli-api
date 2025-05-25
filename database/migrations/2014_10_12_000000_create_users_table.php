@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -16,7 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('phone')->nullable()->unique();
             $table->string('email')->nullable()->unique();
-            $table->string('role')->default('client'); // 'client' or 'craftsman' or 'admin'
+            $table->string('role')->default(User::ROLE_USER); // 'client' or 'craftsman' or 'admin'
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
