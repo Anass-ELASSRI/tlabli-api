@@ -14,9 +14,27 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    CONST ROLE_ADMIN = 1;
-    CONST ROLE_USER = 2;
-    CONST ROLE_CRAFTMAN = 3;
+
+    /**
+     * The type of users.
+     *
+     * @var string
+     */
+
+
+    const ROLE_ADMIN = 1;
+    const ROLE_USER = 2;
+    const ROLE_CRAFTMAN = 3;
+
+    const STATUS_PENDING = 1;
+    const STATUS_ACTIVE = 2;
+    const STATUS_SUSPENDED = 3;
+
+
+
+
+
+
 
     /**
      * The attributes that are mass assignable.
@@ -29,6 +47,10 @@ class User extends Authenticatable
         'password',
         'role',
         'phone',
+        'is_verified',
+        'legal_status',
+        'status',
+        'current_step',
     ];
 
     /**
@@ -38,7 +60,7 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
-        'remember_token',
+        'email_verified_at',
     ];
 
     /**
@@ -51,8 +73,8 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    
-     // Scope for Craftsmen
+
+    // Scope for Craftsmen
     public function scopeCraftmen(Builder $query): Builder
     {
         return $query->where('role', User::ROLE_CRAFTMAN);
@@ -62,5 +84,16 @@ class User extends Authenticatable
     public function scopeClients(Builder $query): Builder
     {
         return $query->where('role', SELF::ROLE_USER);
+    }
+
+
+    public function craftman()
+    {
+        return $this->hasOne(Craftman::class);
+    }
+
+    public function permissions()
+    {
+        return $this->belongsToMany(Permission::class);
     }
 }

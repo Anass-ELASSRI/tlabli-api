@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
+use App\Models\Craftman;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -36,51 +38,29 @@ class AuthController extends Controller
             'message' => 'Logged out successfully',
         ]);
     }
-    public function registerCraftsman(Request $request)
+    public function register(Request $request)
     {
-        $data = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'phone' => 'required|string|unique:users|max:15',
-            'password' => 'required|string',
-
+        $validator = ApiResponse::validate($request->all(), [
+            'name'     => 'required|string|max:255',
+            'email' => 'nullable|email|unique:users,email|required_without:phone',
+            'phone' => 'nullable|string|unique:users,phone|max:15|required_without:email',
+            'password' => 'required|min:8',
+            'role' => 'required|in:' . User::ROLE_CRAFTMAN . ',' . User::ROLE_USER . ',',
         ]);
-        // Hash the password if it's provided
-        if (isset($data['password'])) {
-            $data['password'] = Hash::make($data['password']);
-        }
-        // Set the role based on the type
-        $data['role'] = User::ROLE_CRAFTMAN;
-        $craftman = User::create($data);
-        return response()->json([
-            'data' => $craftman,
-            'message' => 'Craftman created successfully',
-            'success' => true,
-        ], 201);
-    }
-    public function registerClient(Request $request)
-    {
-        $data = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'phone' => 'required|string|unique:users|max:15',
-            'password' => 'required|string',
 
+
+        $user = User::create([
+            'name'         => $request->name,
+            'email'        => $request->email,
+            'phone'        => $request->phone,
+            'password'     => Hash::make($request->password),
+            'status'       => User::STATUS_PENDING,
+            'role'         => $request->role,
         ]);
-        // Hash the password if it's provided
-        if (isset($data['password'])) {
-            $data['password'] = Hash::make($data['password']);
-        }
-        // Set the role based on the type
-        $data['role'] = User::ROLE_USER;
-
-
-        $craftman = User::create($data);
-
         return response()->json([
-            'data' => $craftman,
-            'message' => 'client created successfully',
-            'success' => true,
+            'message'       => 'User created successfully.',
+            'user'          => $user,
+            'next_step'     => $user->role == User::ROLE_CRAFTMAN ? Craftman::STEP_BASIC_INFO : null,
         ], 201);
     }
 }
