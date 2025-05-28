@@ -4,23 +4,23 @@ namespace App\Http\Controllers\API;
 
 use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
-use App\Models\Craftman;
+use App\Models\Craftsman;
 use App\Models\User;
 use App\Services\CraftsmanService;
 use Illuminate\Http\Request;
 use Laravel\Sanctum\PersonalAccessToken;
 
-class CraftmanController extends Controller
+class CraftsmanController extends Controller
 {
     public function index()
     {
         $craftmen = User::craftmen()->get();
-        return ApiResponse::success($craftmen, 'Craftman retrieved successfully', 200);
+        return ApiResponse::success($craftmen, 'Craftsman retrieved successfully', 200);
     }
 
-    public function completeRegistration(CraftsmanService $CraftmanService, Request $request)
+    public function completeRegistration(CraftsmanService $CraftsmanService, Request $request)
     {
-        $response = $CraftmanService->handleProfileStep($request);
+        $response = $CraftsmanService->handleProfileStep($request);
 
         return $response;
     }
@@ -28,39 +28,39 @@ class CraftmanController extends Controller
 
     public function show($id, Request $request)
     {
-        $craftman = Craftman::find($id)->with('user')->first();
+        $craftsman = Craftsman::find($id)->with('user')->first();
 
-        if (!$craftman) {
+        if (!$craftsman) {
             return response()->json([
-                'message' => 'Craftman not found',
+                'message' => 'Craftsman not found',
                 'success' => false,
             ], 404);
         }
-        $craftman['is_owner'] = false;
+        $craftsman['is_owner'] = false;
         $accessToken = $request->bearerToken();
         if ($accessToken) {
             $token = PersonalAccessToken::findToken($accessToken);
-            if ($token && $token->tokenable_id === $craftman->user_id) {
-                $craftman['is_owner'] = true;
+            if ($token && $token->tokenable_id === $craftsman->user_id) {
+                $craftsman['is_owner'] = true;
             }
         }
 
-        return ApiResponse::success($craftman, 'Craftman retrieved successfully', 200);
+        return ApiResponse::success($craftsman, 'Craftsman retrieved successfully', 200);
     }
     public function update(Request $request, $id)
     {
         $user = $request->user();
 
 
-        $craftman = User::craftmen()->find($id);
+        $craftsman = User::craftmen()->find($id);
 
-        if (!$craftman) {
+        if (!$craftsman) {
             return response()->json([
-                'message' => 'Craftman not found',
+                'message' => 'Craftsman not found',
                 'success' => false,
             ], 404);
         }
-        if ($user != $craftman->user->id) {
+        if ($user != $craftsman->user->id) {
             ApiResponse::error('Unauthorized action.', 403);
         }
 
@@ -70,8 +70,8 @@ class CraftmanController extends Controller
             'phone' => 'sometimes|string|unique:users,' . $id . '|max:15',
         ]);
 
-        $craftman->update($data);
+        $craftsman->update($data);
 
-        return ApiResponse::success($craftman, 'Craftman updated successfully', 200);
+        return ApiResponse::success($craftsman, 'Craftsman updated successfully', 200);
     }
 }

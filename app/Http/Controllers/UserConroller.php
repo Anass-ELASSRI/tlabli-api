@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Craftman;
+use App\Models\Craftsman;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;

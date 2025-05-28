@@ -33,7 +33,7 @@ class PermissionsSeeder extends Seeder
                 continue;
             }
 
-            // Derive model name from controller name (e.g. CraftmanController => Craftman)
+            // Derive model name from controller name (e.g. CraftsmanController => Craftsman)
             $modelName = strtolower(str_replace('Controller', '', $reflection->getShortName()));
 
             // Scan public methods for common action names
@@ -43,7 +43,7 @@ class PermissionsSeeder extends Seeder
                 // Filter only action methods you want to consider
                 if (in_array($methodName, ['index', 'show', 'store', 'update', 'destroy', 'create', 'edit', 'completeRegistration'])) {
 
-                    // permission name example: 'Craftman.index'
+                    // permission name example: 'Craftsman.index'
                     $permissionName = $modelName . '.' . $methodName;
 
                     Permission::firstOrCreate(

@@ -3,7 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
-use App\Http\Controllers\API\CraftmanController;
+use App\Http\Controllers\API\CraftsmanController;
+use App\Http\Controllers\API\CraftsmanRequestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,16 +21,19 @@ use App\Http\Controllers\API\CraftmanController;
 Route::post('/register', [AuthController::class, 'register']);
 
 Route::post('/login',    [AuthController::class, 'login']);
-Route::get('/craftsman/index', [CraftmanController::class, 'index']);
-Route::get('/craftsman/{id}', [  CraftmanController::class, 'show']); 
+Route::get('/craftsmen/index', [CraftsmanController::class, 'index']);
+Route::get('/craftsmen/{id}', [  CraftsmanController::class, 'show']); 
 
 Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/user',    [AuthController::class, 'user']);
     Route::post('/logout', [AuthController::class, 'logout']);
     // Route::get('/profile', [userC::class, 'profile']);
     
-    Route::prefix('craftsman')->group(function () {
-        Route::put('/{id}', [CraftmanController::class, 'update']);
-        // Route::get('/{id}/ratings', [RatingController::class, 'craftmanRatings']);
-        Route::post('/complete-registration', [CraftmanController::class, 'completeRegistration']);
+    Route::prefix('craftsmen')->group(function () {
+        Route::put('/{id}', [CraftsmanController::class, 'update']);
+        // Route::get('/{id}/ratings', [RatingController::class, 'craftsmanRatings']);
+        Route::post('/complete-registration', [CraftsmanController::class, 'completeRegistration']);
+        Route::post('/{craftsman}/requests', [CraftsmanRequestController::class, 'store']);
+
     });
 });

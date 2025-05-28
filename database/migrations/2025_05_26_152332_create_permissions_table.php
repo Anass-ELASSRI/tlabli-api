@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('permissions', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();  // e.g. 'edit-profile', 'delete-Craftman'
+            $table->string('name')->unique();  // e.g. 'edit-profile', 'delete-Craftsman'
             $table->string('description')->nullable();
             $table->timestamps();
         });
