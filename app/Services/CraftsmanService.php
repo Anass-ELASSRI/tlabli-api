@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Helpers\ApiResponse;
-use App\Models\Craftman;
+use App\Models\Craftsman;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -18,30 +18,33 @@ class CraftsmanService
                 'message' => 'Unauthorized action.',
             ], 422);
         }
-        $craftman = $user->craftman;
-        if (!$craftman) {
+        $craftsman = $user->craftsman;
+        if (!$craftsman) {
             $validator = ApiResponse::validate($request->all(), [
                 'profession'   => 'required|string',
+                'bio'          => 'nullable|string|max:1000',
+                'phone'        => 'nullable|string|max:15',
                 'skills'       => 'required|string',
                 'city'         => 'required|string|max:255',
+                'languages'         => 'required|string|max:255',
                 'legal_status'    => 'required|in:0,1,2',
                 'experience_years'    => 'required|integer|min:0|max:50',
             ]);
             $data = array_merge($validator, [
-                'current_step' => Craftman::STEP_DOCS,
+                'current_step' => Craftsman::STEP_DOCS,
             ]);
-            $craftman = $user->craftman()->create($data);
+            $craftsman = $user->craftsman()->create($data);
             return [
-                'message' => 'Craftman created successfully.',
-                'craftman' => $craftman,
-                'next_step' => Craftman::STEP_DOCS,
+                'message' => 'Craftsman created successfully.',
+                'craftsman' => $craftsman,
+                'next_step' => Craftsman::STEP_DOCS,
             ];
         }
 
-        if ($user->craftman && $user->craftman->current_step == Craftman::STEP_DOCS) {
-            $craftman->update([
-                'current_step' => Craftman::STEP_COMPLETE,
-                'status' => Craftman::PROFILE_COMPLETE,
+        if ($user->craftsman && $user->craftsman->current_step == Craftsman::STEP_DOCS) {
+            $craftsman->update([
+                'current_step' => Craftsman::STEP_COMPLETE,
+                'status' => Craftsman::PROFILE_COMPLETE,
             ]);
             $user->update([
                 'status' => User::STATUS_ACTIVE,
@@ -52,11 +55,33 @@ class CraftsmanService
             ];
         }
 
-        if ($user->craftman && $user->craftman->current_step == Craftman::STEP_COMPLETE) {
+        if ($user->craftsman && $user->craftsman->current_step == Craftsman::STEP_COMPLETE) {
             return [
-                'message' => 'Craftman profile is already complete.',
+                'message' => 'Craftsman profile is already complete.',
                 'next_step' => null
             ];
         }
+    }
+
+    public function handleRequest(Request $request,Craftsman $craftsman, User $client)
+    {
+        if ($client->role != User::ROLE_USER) {
+            return ApiResponse::error('Unauthorized action.', 422);
+        }
+
+        if ($craftsman->hasPendingRequestFrom($client)) {
+            return ApiResponse::error('You already have a pending request for this craftsman.', 422);
+        }
+        $data = ApiResponse::validate($request->all(), [
+            'subject' => 'nullable|string|max:255',
+            'message' => 'required|string',
+        ]);
+
+        $request = $craftsman->requests()->create([
+            'user_id' => $request->user()->id,
+            'subject' => $data['subject'] ?? null,
+            'message' => $data['message'],
+        ]);
+        return ApiResponse::success($request, 'Craftsman request created successfully', 201);
     }
 }

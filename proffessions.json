@@ -1,0 +1,83 @@
+[
+  {
+    "profession": "Électricien",
+    "competences_cles": [
+      "Lecture de plans électriques",
+      "Installation de câblage et d'équipements électriques",
+      "Dépannage et maintenance",
+      "Respect des normes de sécurité"
+    ]
+  },
+  {
+    "profession": "Plombier",
+    "competences_cles": [
+      "Lecture de plans de plomberie",
+      "Installation et réparation de tuyauterie",
+      "Soudures de tuyaux",
+      "Diagnostic de fuites et entretien"
+    ]
+  },
+  {
+    "profession": "Peintre en bâtiment",
+    "competences_cles": [
+      "Préparation des surfaces",
+      "Application de peinture, vernis ou enduits",
+      "Maîtrise des couleurs et finitions",
+      "Travail en hauteur"
+    ]
+  },
+  {
+    "profession": "Maçon",
+    "competences_cles": [
+      "Construction de murs, dalles et fondations",
+      "Lecture de plans",
+      "Pose de briques, parpaings, pierres",
+      "Utilisation de béton"
+    ]
+  },
+  {
+    "profession": "Menuisier",
+    "competences_cles": [
+      "Conception et fabrication de meubles",
+      "Pose de portes, fenêtres, placards",
+      "Lecture de plans et dessins techniques",
+      "Utilisation d’outils électriques"
+    ]
+  },
+  {
+    "profession": "Soudeur",
+    "competences_cles": [
+      "Techniques de soudage MIG, TIG, à l’arc",
+      "Lecture de plans métalliques",
+      "Préparation des pièces métalliques",
+      "Contrôle qualité"
+    ]
+  },
+  {
+    "profession": "Technicien en climatisation",
+    "competences_cles": [
+      "Installation et entretien de climatiseurs",
+      "Manipulation des fluides frigorigènes",
+      "Diagnostic et réparation",
+      "Conformité aux normes environnementales"
+    ]
+  },
+  {
+    "profession": "Carreleur",
+    "competences_cles": [
+      "Pose de carrelage sol et mur",
+      "Découpe de carreaux",
+      "Préparation des surfaces",
+      "Application de joints"
+    ]
+  },
+  {
+    "profession": "Jardinier",
+    "competences_cles": [
+      "Entretien des espaces verts",
+      "Taille et élagage",
+      "Plantation et arrosage",
+      "Utilisation d’outils de jardinage"
+    ]
+  }
+]

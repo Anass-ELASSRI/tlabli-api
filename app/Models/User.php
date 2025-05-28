@@ -87,9 +87,9 @@ class User extends Authenticatable
     }
 
 
-    public function craftman()
+    public function craftsman()
     {
-        return $this->hasOne(Craftman::class);
+        return $this->hasOne(Craftsman::class);
     }
 
     public function permissions()

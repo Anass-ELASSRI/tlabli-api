@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('phone')->nullable()->unique();
             $table->string('email')->nullable()->unique();
-            $table->string('role')->default(User::ROLE_USER); // 'client' or 'Craftman' or 'admin'
+            $table->string('role')->default(User::ROLE_USER); // 'client' or 'Craftsman' or 'admin'
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->unsignedTinyInteger('status')->default(User::STATUS_PENDING);
