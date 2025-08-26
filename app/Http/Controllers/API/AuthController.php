@@ -64,14 +64,14 @@ class AuthController extends Controller
 
         return ApiResponse::success(null, 'Logged out successfully', 200)->withCookie($cookie);
     }
-    public function registerClient(Request $request)
+    public function register(Request $request)
     {
         $data = ApiResponse::validate($request->all(), [
             'full_name'     => 'required|string|max:255',
             'email' => 'nullable|email|unique:users,email',
             'phone' => 'required|string|unique:users,phone|max:15',
             'password' => 'required|min:8',
-            'city' => 'required|min:8',
+            'city' => 'required|string',
             'role' => 'required|in:' . User::ROLE_ARTISAN . ',' . User::ROLE_CLINET . ',',
         ]);
 
