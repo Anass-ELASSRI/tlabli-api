@@ -4,12 +4,12 @@ namespace App\Http\Controllers\API;
 
 use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
-use App\Models\Craftsman;
+use App\Models\Artisan;
 use App\Models\User;
-use App\Services\CraftsmanService;
+use App\Services\ArtisanService;
 use Illuminate\Http\Request;
 
-class CraftsmanRequestController extends Controller
+class ArtisanRequestController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -22,14 +22,14 @@ class CraftsmanRequestController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, $craftsman, CraftsmanService $craftsmanService)
+    public function store(Request $request, $artisan, ArtisanService $artisanService)
     {
         $client = $request->user();
-        $craftsman = Craftsman::find($craftsman);
-        if (!$craftsman) {
-            return ApiResponse::error('Craftsman not found', 404);
+        $artisan = Artisan::find($artisan);
+        if (!$artisan) {
+            return ApiResponse::error('Artisan not found', 404);
         }
-        $response = $craftsmanService->handleRequest($request, $craftsman, $client);
+        $response = $artisanService->handleRequest($request, $artisan, $client);
         return $response;
     }
 

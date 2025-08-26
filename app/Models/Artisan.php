@@ -8,9 +8,11 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
 
-class Craftsman extends Model implements HasMedia
+class Artisan extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia;
+
+    protected $table = 'artisans';
 
 
 
@@ -26,13 +28,13 @@ class Craftsman extends Model implements HasMedia
 
 
     /**
-     * The legal status of craftsman.
+     * The legal status of artisan.
      *
      * @var string
      */
-    const LEGAL_STATUS_UNVERIFIED = 0;
-    const LEGAL_STATUS_COMPANY = 1;
-    const LEGAL_STATUS_AUTO_ENTREPRENEUR = 2;
+    const LEGAL_STATUS_UNVERIFIED = 1;
+    const LEGAL_STATUS_COMPANY = 2;
+    const LEGAL_STATUS_AUTO_ENTREPRENEUR = 3;
 
 
     const STEP_BASIC_INFO = 1;
@@ -75,11 +77,11 @@ class Craftsman extends Model implements HasMedia
 
     public function requests()
     {
-        return $this->hasMany(CraftsmanRequest::class);
+        return $this->hasMany(ArtisanRequest::class);
     }
 
     public function hasPendingRequestFrom($client)
     {
-        return $this->requests()->where('user_id', $client->id)->whereIn('status', CraftsmanRequest::WORK_IN_STATUS)->exists();
+        return $this->requests()->where('user_id', $client->id)->whereIn('status', ArtisanRequest::WORK_IN_STATUS)->exists();
     }
 }

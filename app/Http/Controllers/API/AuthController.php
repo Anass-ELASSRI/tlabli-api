@@ -4,7 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
-use App\Models\Craftsman;
+use App\Models\Artisan;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
@@ -35,11 +35,24 @@ class AuthController extends Controller
             return response(['message' => 'Invalid credentials'], 401);
         }
 
-        $token = $user->createToken('apptoken')->plainTextToken;
-        $cookie = cookie('jwt', $token, 60 * 24 * 7); // 7 days
+        $token = $user->createToken('apptoken');
+        $token->accessToken->expires_at = now()->addDays(7); // 7 days expiry
+        $token->accessToken->save();
+
+        $plainTextToken = $token->plainTextToken;
+        $cookie = cookie(
+            'jwt',            // name
+            $plainTextToken,           // value
+            60 * 24 * 7,      // minutes (7 days)
+            '/',              // path
+            null,             // domain (null means current domain)
+            true,             // secure (only sent over HTTPS)
+            true,             // HttpOnly (JS can't access)
+            false,            // raw
+            'Strict'          // SameSite
+        );
         return ApiResponse::success([
             'user' => $user,
-            // 'token' => $token,
         ], 'Login successful', 200)->withCookie($cookie);
     }
 
@@ -53,8 +66,9 @@ class AuthController extends Controller
     }
     public function register(Request $request)
     {
-        $validator = ApiResponse::validate($request->all(), [
-            'name'     => 'required|string|max:255',
+        $data = ApiResponse::validate($request->all(), [
+            'first_name'     => 'required|string|max:255',
+            'last_name'     => 'required|string|max:255',
             'email' => 'nullable|email|unique:users,email|required_without:phone',
             'phone' => 'nullable|string|unique:users,phone|max:15|required_without:email',
             'password' => 'required|min:8',
@@ -62,18 +76,12 @@ class AuthController extends Controller
         ]);
 
 
-        $user = User::create([
-            'name'         => $request->name,
-            'email'        => $request->email,
-            'phone'        => $request->phone,
-            'password'     => Hash::make($request->password),
-            'status'       => User::STATUS_PENDING,
-            'role'         => $request->role,
-        ]);
+        $data['password'] = Hash::make($data['password']);
+        $user = User::create($data);
         return response()->json([
             'message'       => 'User created successfully.',
             'user'          => $user,
-            'next_step'     => $user->role == User::ROLE_CRAFTMAN ? Craftsman::STEP_BASIC_INFO : null,
+            'next_step'     => $user->role == User::ROLE_CRAFTMAN ? Artisan::STEP_BASIC_INFO : null,
         ], 201);
     }
 }

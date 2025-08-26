@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class CraftsmanRequest extends Model
+class ArtisanRequest extends Model
 {
     use HasFactory;
 
@@ -32,9 +32,9 @@ class CraftsmanRequest extends Model
         'status',
     ];
 
-    public function craftsman()
+    public function artisan()
     {
-        return $this->belongsTo(Craftsman::class);
+        return $this->belongsTo(Artisan::class);
     }
 
     public function user()

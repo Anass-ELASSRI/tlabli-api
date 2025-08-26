@@ -14,10 +14,11 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('first_name');
+            $table->string('last_name');
             $table->string('phone')->nullable()->unique();
             $table->string('email')->nullable()->unique();
-            $table->string('role')->default(User::ROLE_USER); // 'client' or 'Craftsman' or 'admin'
+            $table->string('role')->default(User::ROLE_USER); // 'client' or 'Artisan' or 'admin'
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->unsignedTinyInteger('status')->default(User::STATUS_PENDING);

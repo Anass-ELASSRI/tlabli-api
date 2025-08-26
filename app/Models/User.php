@@ -42,7 +42,8 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
         'email',
         'password',
         'role',
@@ -73,9 +74,12 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
+    protected $appends = [
+        'full_name',
+    ];
 
-    // Scope for Craftsmen
-    public function scopeCraftmen(Builder $query): Builder
+    // Scope for Artisans
+    public function scopeArtisans(Builder $query): Builder
     {
         return $query->where('role', User::ROLE_CRAFTMAN);
     }
@@ -87,13 +91,18 @@ class User extends Authenticatable
     }
 
 
-    public function craftsman()
+    public function artisan()
     {
-        return $this->hasOne(Craftsman::class);
+        return $this->hasOne(Artisan::class);
     }
 
     public function permissions()
     {
         return $this->belongsToMany(Permission::class);
+    }
+
+    public function getFullNameAttribute()
+    {
+        return $this->first_name . ' ' . $this->last_name;
     }
 }

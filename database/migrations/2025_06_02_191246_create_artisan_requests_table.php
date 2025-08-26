@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\CraftsmanRequest;
+use App\Models\ArtisanRequest;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -12,13 +12,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('craftsman_requests', function (Blueprint $table) {
+        Schema::create('artisan_requests', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('craftsman_id')->constrained();
+            $table->foreignId('artisan_id')->constrained();
             $table->foreignId('user_id')->nullable()->constrained();
             $table->string('subject')->nullable();
             $table->text('message');
-            $table->unsignedTinyInteger('status')->default(CraftsmanRequest::STATUS_PENDING);
+            $table->unsignedTinyInteger('status')->default(ArtisanRequest::STATUS_PENDING);
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('craftsman_requests');
+        Schema::dropIfExists('artisan_requests');
     }
 };
