@@ -64,24 +64,20 @@ class AuthController extends Controller
 
         return ApiResponse::success(null, 'Logged out successfully', 200)->withCookie($cookie);
     }
-    public function register(Request $request)
+    public function registerClient(Request $request)
     {
         $data = ApiResponse::validate($request->all(), [
-            'first_name'     => 'required|string|max:255',
-            'last_name'     => 'required|string|max:255',
-            'email' => 'nullable|email|unique:users,email|required_without:phone',
-            'phone' => 'nullable|string|unique:users,phone|max:15|required_without:email',
+            'full_name'     => 'required|string|max:255',
+            'email' => 'nullable|email|unique:users,email',
+            'phone' => 'required|string|unique:users,phone|max:15',
             'password' => 'required|min:8',
-            'role' => 'required|in:' . User::ROLE_CRAFTMAN . ',' . User::ROLE_USER . ',',
+            'city' => 'required|min:8',
+            'role' => 'required|in:' . User::ROLE_ARTISAN . ',' . User::ROLE_CLINET . ',',
         ]);
 
 
         $data['password'] = Hash::make($data['password']);
         $user = User::create($data);
-        return response()->json([
-            'message'       => 'User created successfully.',
-            'user'          => $user,
-            'next_step'     => $user->role == User::ROLE_CRAFTMAN ? Artisan::STEP_BASIC_INFO : null,
-        ], 201);
+        return ApiResponse::success($user, 'User created successfully', 201);
     }
 }

@@ -23,12 +23,12 @@ class User extends Authenticatable
 
 
     const ROLE_ADMIN = 1;
-    const ROLE_USER = 2;
-    const ROLE_CRAFTMAN = 3;
+    const ROLE_CLINET = 2;
+    const ROLE_ARTISAN = 3;
 
-    const STATUS_PENDING = 1;
-    const STATUS_ACTIVE = 2;
-    const STATUS_SUSPENDED = 3;
+    // const STATUS_PENDING = 1;
+    // const STATUS_ACTIVE = 2;
+    // const STATUS_SUSPENDED = 3;
 
 
 
@@ -42,16 +42,15 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'first_name',
-        'last_name',
+        'full_name',
         'email',
         'password',
         'role',
         'phone',
-        'is_verified',
-        'legal_status',
         'status',
-        'current_step',
+        'city',
+        'is_verified',
+        'is_deleted',
     ];
 
     /**
@@ -81,13 +80,13 @@ class User extends Authenticatable
     // Scope for Artisans
     public function scopeArtisans(Builder $query): Builder
     {
-        return $query->where('role', User::ROLE_CRAFTMAN);
+        return $query->where('role', User::ROLE_ARTISAN);
     }
 
     // Scope for Clients
     public function scopeClients(Builder $query): Builder
     {
-        return $query->where('role', SELF::ROLE_USER);
+        return $query->where('role', SELF::ROLE_CLINET);
     }
 
 

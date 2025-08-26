@@ -14,15 +14,14 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->string('phone')->nullable()->unique();
+            $table->string('full_name');
+            $table->string('phone')->unique();
+            $table->string('city');
             $table->string('email')->nullable()->unique();
-            $table->string('role')->default(User::ROLE_USER); // 'client' or 'Artisan' or 'admin'
-            $table->timestamp('email_verified_at')->nullable();
+            $table->string('role')->default(User::ROLE_CLINET); // 'client' or 'Artisan' or 'admin'
             $table->string('password');
-            $table->unsignedTinyInteger('status')->default(User::STATUS_PENDING);
             $table->boolean('is_verified')->default(false);
+            $table->timestamp('verified_at')->nullable();
             $table->boolean('is_deleted')->default(false);
             $table->timestamps();
         });

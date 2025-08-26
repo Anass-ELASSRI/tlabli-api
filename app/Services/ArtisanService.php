@@ -12,7 +12,7 @@ class ArtisanService
     public function handleProfileStep(Request $request)
     {
         $user = $request->user();
-        if ($user->role != User::ROLE_CRAFTMAN) {
+        if ($user->role != User::ROLE_ARTISAN) {
             return response()->json([
                 'success' => false,
                 'message' => 'Unauthorized action.',
@@ -65,7 +65,7 @@ class ArtisanService
 
     public function handleRequest(Request $request,Artisan $artisan, User $client)
     {
-        if ($client->role != User::ROLE_USER) {
+        if ($client->role != User::ROLE_CLINET) {
             return ApiResponse::error('Unauthorized action.', 422);
         }
 
