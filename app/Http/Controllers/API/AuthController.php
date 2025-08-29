@@ -20,7 +20,6 @@ class AuthController extends Controller
         return ApiResponse::success([
             'cookies' => $request->cookies->all(),
             'headers' => $request->headers->all(),
-            'user' => $user
         ], 'test');
         if (!$user) {
             return ApiResponse::error('Unauthenticated', 401);
