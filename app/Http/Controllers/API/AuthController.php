@@ -14,6 +14,13 @@ use Illuminate\Validation\Rules\Enum;
 class AuthController extends Controller
 {
 
+    public function test(Request $request)
+    {
+        return ApiResponse::success([
+            'cookies' => $request->cookies->all(),
+            'headers' => $request->headers->all(),
+        ], 'test');
+    }
     public function me(Request $request)
     {
         return ApiResponse::success([
