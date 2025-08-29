@@ -16,11 +16,11 @@ class AuthController extends Controller
 
     public function me(Request $request)
     {
-        $user = $request->user();
         return ApiResponse::success([
             'cookies' => $request->cookies->all(),
             'headers' => $request->headers->all(),
         ], 'test');
+        $user = $request->user();
         if (!$user) {
             return ApiResponse::error('Unauthenticated', 401);
         }
