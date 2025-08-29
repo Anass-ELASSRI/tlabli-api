@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('artisan_requests', function (Blueprint $table) {
             $table->id();
             $table->foreignId('artisan_id')->constrained();
-            $table->foreignId('user_id')->nullable()->constrained();
+            $table->foreignUuid('user_id')->nullable()->constrained();
             $table->string('subject')->nullable();
             $table->text('message');
             $table->unsignedTinyInteger('status')->default(ArtisanRequest::STATUS_PENDING);

@@ -22,7 +22,7 @@ return new class extends Migration
             $table->unsignedTinyInteger('current_step');
             $table->unsignedTinyInteger('experience_years');
             $table->unsignedTinyInteger('status')->default(Artisan::PROFILE_INCOMPLETE);
-            $table->foreignId('user_id')->constrained('users');
+            $table->foreignUuid('user_id')->constrained('users');
             $table->string('languages'); // e.g. "English, French"
             $table->string('city');
             $table->json('social_links')->nullable(); // e.g. {"facebook": "...", "instagram": "..."}

@@ -4,37 +4,33 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use App\Enums\UserRoles;
+use App\Enums\UserStatus;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Str;
+
 
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    public $incrementing = false; // UUID is not auto-incrementing
+    protected $keyType = 'string'; // Key is a string, not integer
 
-    /**
-     * The type of users.
-     *
-     * @var string
-     */
+    protected static function boot(): void
+    {
+        parent::boot();
 
-
-    const ROLE_ADMIN = 1;
-    const ROLE_CLINET = 2;
-    const ROLE_ARTISAN = 3;
-
-    // const STATUS_PENDING = 1;
-    // const STATUS_ACTIVE = 2;
-    // const STATUS_SUSPENDED = 3;
-
-
-
-
-
-
+        static::creating(function ($model) {
+            if (!$model->getKey()) {
+                $model->{$model->getKeyName()} = (string) Str::uuid();
+            }
+        });
+    }
 
     /**
      * The attributes that are mass assignable.
@@ -60,7 +56,9 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
-        'email_verified_at',
+        'verified_at',
+        'is_deleted',
+        'is_verified'
     ];
 
     /**
@@ -71,22 +69,21 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'status' => UserStatus::class,
+        'role' => UserRoles::class
     ];
 
-    protected $appends = [
-        'full_name',
-    ];
 
     // Scope for Artisans
     public function scopeArtisans(Builder $query): Builder
     {
-        return $query->where('role', User::ROLE_ARTISAN);
+        return $query->where('role', UserRoles::Artisan);
     }
 
     // Scope for Clients
     public function scopeClients(Builder $query): Builder
     {
-        return $query->where('role', SELF::ROLE_CLINET);
+        return $query->where('role', UserRoles::Client);
     }
 
 
@@ -98,10 +95,5 @@ class User extends Authenticatable
     public function permissions()
     {
         return $this->belongsToMany(Permission::class);
-    }
-
-    public function getFullNameAttribute()
-    {
-        return $this->first_name . ' ' . $this->last_name;
     }
 }

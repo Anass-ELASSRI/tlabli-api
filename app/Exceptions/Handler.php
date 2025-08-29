@@ -32,7 +32,7 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $exception)
     {
         if ($exception instanceof ValidationException) {
-            return ApiResponse::error('Validation failed', $exception->errors(), 422);
+            return ApiResponse::error('Validation failed', 422, $exception->errors());
         }
 
         return parent::render($request, $exception);

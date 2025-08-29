@@ -15,7 +15,7 @@ class ApiResponse
         ], $code);
     }
 
-    public static function error($message = 'Error', $errors = null, $code = 400)
+    public static function error($message = 'Error', $code = 400, $errors = null)
     {
         $response = [
             'success' => false,

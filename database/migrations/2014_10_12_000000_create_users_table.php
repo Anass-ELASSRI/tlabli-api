@@ -13,16 +13,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->string('full_name');
             $table->string('phone')->unique();
             $table->string('city');
             $table->string('email')->nullable()->unique();
-            $table->string('role')->default(User::ROLE_CLINET); // 'client' or 'Artisan' or 'admin'
+            $table->string('role')->default(\App\Enums\UserRoles::Client->value);
             $table->string('password');
             $table->boolean('is_verified')->default(false);
             $table->timestamp('verified_at')->nullable();
             $table->boolean('is_deleted')->default(false);
+            $table->string('status')->default(\App\Enums\UserStatus::Pending->value);
             $table->timestamps();
         });
     }

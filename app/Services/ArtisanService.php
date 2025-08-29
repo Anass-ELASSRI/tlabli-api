@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Enums\UserRoles;
+use App\Enums\UserStatus;
 use App\Helpers\ApiResponse;
 use App\Models\Artisan;
 use App\Models\User;
@@ -12,7 +14,7 @@ class ArtisanService
     public function handleProfileStep(Request $request)
     {
         $user = $request->user();
-        if ($user->role != User::ROLE_ARTISAN) {
+        if ($user->role != UserRoles::Artisan) {
             return response()->json([
                 'success' => false,
                 'message' => 'Unauthorized action.',
@@ -47,7 +49,7 @@ class ArtisanService
                 'status' => Artisan::PROFILE_COMPLETE,
             ]);
             $user->update([
-                'status' => User::STATUS_ACTIVE,
+                'status' => UserStatus::Active,
             ]);
             return [
                 'message' => 'Cratfsman profile completed',
@@ -65,8 +67,8 @@ class ArtisanService
 
     public function handleRequest(Request $request,Artisan $artisan, User $client)
     {
-        if ($client->role != User::ROLE_CLINET) {
-            return ApiResponse::error('Unauthorized action.', 422);
+        if ($client->role != UserRoles::Client) {
+            return ApiResponse::error('Unauthorized action', 422);
         }
 
         if ($artisan->hasPendingRequestFrom($client)) {
