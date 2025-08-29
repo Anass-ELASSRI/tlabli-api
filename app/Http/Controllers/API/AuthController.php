@@ -60,7 +60,7 @@ class AuthController extends Controller
             $plainTextToken,           // value
             60 * 24 * 7,      // minutes (7 days)
             '/',              // path
-            '',             // domain (null means current domain)
+            null,             // domain (null means current domain)
             true,             // secure (only sent over HTTPS) => to true in production
             true,             // HttpOnly (JS can't access)
             false,            // raw
