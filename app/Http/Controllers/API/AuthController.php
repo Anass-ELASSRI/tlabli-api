@@ -17,6 +17,11 @@ class AuthController extends Controller
     public function me(Request $request)
     {
         $user = $request->user();
+        return ApiResponse::success([
+            'cookies' => $request->cookies->all(),
+            'headers' => $request->headers->all(),
+            'user' => $user
+        ], 'test');
         if (!$user) {
             return ApiResponse::error('Unauthenticated', 401);
         }
@@ -28,11 +33,6 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        return ApiResponse::success([
-            'cookies' => $request->cookies->all(),
-            'headers' => $request->headers->all(),
-        ], 'test');
-
         $fields = $request->validate([
             'phone' => 'required|string',
             'password' => 'required|string',
