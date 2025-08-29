@@ -7,6 +7,7 @@ use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Enum;
@@ -30,32 +31,34 @@ class AuthController extends Controller
     {
         $fields = $request->validate([
             'phone' => 'required|string',
-            'password' => 'required|string',
+            'password' => 'required|string|min:8',
         ]);
 
-        $user = User::where('phone', $fields['phone'])->first();
-
-        if (!$user || !Hash::check($fields['password'], $user->password)) {
+        // Attempt login using phone
+        if (!Auth::attempt(['phone' => $fields['phone'], 'password' => $fields['password']])) {
             return ApiResponse::error('invalid_credentials', 401);
         }
 
-        $token = $user->createToken('apptoken');
-        $token->accessToken->expires_at = now()->addDays(7); // 7 days expiry
-        $token->accessToken->save();
+        $user = $request->user(); // authenticated user
 
-        $plainTextToken = $token->plainTextToken;
-        $cookie = cookie(
-            'jwt',            // name
-            $plainTextToken,           // value
-            60 * 24 * 7,      // minutes (7 days)
-            '/',              // path
-            null,             // domain (null means current domain)
-            true,             // secure (only sent over HTTPS) => to true in production
-            true,             // HttpOnly (JS can't access)
-            false,            // raw
-            'None'          // SameSite
-        );
-        return ApiResponse::success(['user' => $user, 'token' => $plainTextToken], 'Login successful', 200)->withCookie($cookie);
+
+        // $token = $user->createToken('apptoken');
+        // $token->accessToken->expires_at = now()->addDays(7); // 7 days expiry
+        // $token->accessToken->save();
+
+        // $plainTextToken = $token->plainTextToken;
+        // $cookie = cookie(
+        //     'jwt',            // name
+        //     $plainTextToken,           // value
+        //     60 * 24 * 7,      // minutes (7 days)
+        //     '/',              // path
+        //     null,             // domain (null means current domain)
+        //     true,             // secure (only sent over HTTPS) => to true in production
+        //     true,             // HttpOnly (JS can't access)
+        //     false,            // raw
+        //     'None'          // SameSite
+        // );
+        return ApiResponse::success($user, 'Login successful');
     }
 
     public function logout(Request $request)
