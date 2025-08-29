@@ -26,6 +26,14 @@ Route::get('/clear-cache', function () {
     return 'Cache cleared!';
 });
 
+Route::get('/debug', function (\Illuminate\Http\Request $request) {
+    return [
+        'is_secure' => $request->isSecure(),
+        'scheme' => $request->getScheme(),
+        'headers' => $request->headers->all(),
+    ];
+});
+
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login',    [AuthController::class, 'login']);
 Route::get('/artisans', [ArtisanController::class, 'index']);
