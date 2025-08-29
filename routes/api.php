@@ -19,7 +19,6 @@ use App\Http\Controllers\API\ArtisanRequestController;
 
 
 
-Route::get('/test', [AuthController::class, 'test']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login',    [AuthController::class, 'login']);
 Route::get('/artisans', [ArtisanController::class, 'index']);

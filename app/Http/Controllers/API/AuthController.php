@@ -14,19 +14,8 @@ use Illuminate\Validation\Rules\Enum;
 class AuthController extends Controller
 {
 
-    public function test(Request $request)
-    {
-        return ApiResponse::success([
-            'cookies' => $request->cookies->all(),
-            'headers' => $request->headers->all(),
-        ], 'test');
-    }
     public function me(Request $request)
     {
-        return ApiResponse::success([
-            'cookies' => $request->cookies->all(),
-            'headers' => $request->headers->all(),
-        ], 'test');
         $user = $request->user();
         if (!$user) {
             return ApiResponse::error('Unauthenticated', 401);
@@ -66,7 +55,7 @@ class AuthController extends Controller
             false,            // raw
             'None'          // SameSite
         );
-        return ApiResponse::success($user, 'Login successful', 200)->withCookie($cookie);
+        return ApiResponse::success(['user' => $user, 'token' => $plainTextToken], 'Login successful', 200)->withCookie($cookie);
     }
 
     public function logout(Request $request)
