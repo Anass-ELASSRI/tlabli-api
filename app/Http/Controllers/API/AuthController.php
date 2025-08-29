@@ -41,23 +41,6 @@ class AuthController extends Controller
 
         $user = $request->user(); // authenticated user
 
-
-        // $token = $user->createToken('apptoken');
-        // $token->accessToken->expires_at = now()->addDays(7); // 7 days expiry
-        // $token->accessToken->save();
-
-        // $plainTextToken = $token->plainTextToken;
-        // $cookie = cookie(
-        //     'jwt',            // name
-        //     $plainTextToken,           // value
-        //     60 * 24 * 7,      // minutes (7 days)
-        //     '/',              // path
-        //     null,             // domain (null means current domain)
-        //     true,             // secure (only sent over HTTPS) => to true in production
-        //     true,             // HttpOnly (JS can't access)
-        //     false,            // raw
-        //     'None'          // SameSite
-        // );
         return ApiResponse::success($user, 'Login successful');
     }
 
