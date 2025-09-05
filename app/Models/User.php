@@ -67,7 +67,7 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
+        'verified_at' => 'datetime',
         'password' => 'hashed',
         'status' => UserStatus::class,
         'role' => UserRoles::class
@@ -95,5 +95,20 @@ class User extends Authenticatable
     public function permissions()
     {
         return $this->belongsToMany(Permission::class);
+    }
+
+    public function isVerfied()
+    {
+        return $this->is_verified;
+    }
+    
+    public function verifications()
+    {
+        return $this->hasMany(UserVerification::class);
+    }
+
+    public function phoneVerification()
+    {
+        return $this->hasOne(UserVerification::class)->where('type', 'phone');
     }
 }

@@ -4,7 +4,7 @@ namespace App\Enums;
 
 enum UserStatus: string
 {
-    case Pending           = 'pending';
+    case NotVerified       = 'not_verified';
     case ProfileIncomplete = 'profile_incomplete';
     case ProfilePending    = 'profile_pending';
     case ProfileRejected   = 'profile_rejected';

@@ -75,4 +75,11 @@ class ArtisanController extends Controller
 
         return ApiResponse::success($artisan, 'Artisan updated successfully', 200);
     }
+
+    public function test(Request $request)
+    {
+        $cookies = $request->cookies->all();
+        $header = $request->header();
+        return ApiResponse::success(['cookies' => $cookies, 'header' => $header], 'Test successful', 200);
+    }
 }

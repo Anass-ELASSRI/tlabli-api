@@ -155,7 +155,7 @@ return [
     |
     */
 
-    'domain' => env('SESSION_DOMAIN', '.tlabli-production.up.railway.app'),
+    'domain' => env('SESSION_DOMAIN', '.localhost'),
 
     /*
     |--------------------------------------------------------------------------
@@ -196,7 +196,7 @@ return [
     |
     */
 
-    'same_site' => 'None',
+    'same_site' => 'lex',
 
     /*
     |--------------------------------------------------------------------------

@@ -23,7 +23,7 @@ return new class extends Migration
             $table->boolean('is_verified')->default(false);
             $table->timestamp('verified_at')->nullable();
             $table->boolean('is_deleted')->default(false);
-            $table->string('status')->default(\App\Enums\UserStatus::Pending->value);
+            $table->string('status')->default(\App\Enums\UserStatus::NotVerified->value);
             $table->timestamps();
         });
     }
