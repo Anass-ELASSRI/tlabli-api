@@ -73,7 +73,7 @@ class AuthController extends Controller
             true,      // secure
             true,      // httpOnly
             false,
-            'Lax'
+            'none'
         );
         $cookie_refresh_token = cookie(
             'refresh_token',
@@ -84,7 +84,7 @@ class AuthController extends Controller
             true,      // secure
             true,      // httpOnly
             false,
-            'Lax'
+            'none'
         );
         return ApiResponse::success(['status' => $user->status], 'Logged in successfully', 200)->withCookie($cookie_access_token)->withCookie($cookie_refresh_token);
     }
