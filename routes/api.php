@@ -29,21 +29,16 @@ Route::get('/test', [ArtisanController::class, 'test']);
 
 Route::middleware(['jwt'])->group(function () {
     Route::get('/me',    [AuthController::class, 'me']);
-});
+
+    Route::post('/refresh', [AuthController::class, 'refresh']);
 
 
 
-
-Route::middleware('auth:sanctum')->group(function () {
-
-    // verify phone
     Route::post('/verify-phone', [PhoneVerificationController::class, 'verify']);
     Route::post('/resend-code', [PhoneVerificationController::class, 'resend']);
     Route::post('/verify-account', [AuthController::class, 'verifyAccount'])->name('verification.account');
 
-    
-    // registration 
-    Route::get('/me',    [AuthController::class, 'me']);
+
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/complete-registration', [ArtisanController::class, 'completeRegistration']);
     // Route::get('/profile', [userC::class, 'profile']);

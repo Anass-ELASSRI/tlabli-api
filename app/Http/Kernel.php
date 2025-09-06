@@ -47,7 +47,7 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\ThrottleRequests::class . ':api',
 
         ],
-        'jwt' => \App\Http\Middleware\JwtMiddleware::class,
+        'jwt' => [\App\Http\Middleware\JwtMiddleware::class]
     ];
 
     /**

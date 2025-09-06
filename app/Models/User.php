@@ -47,6 +47,7 @@ class User extends Authenticatable
         'city',
         'is_verified',
         'is_deleted',
+        'refresh_token'
     ];
 
     /**
