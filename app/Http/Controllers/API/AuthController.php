@@ -126,7 +126,73 @@ class AuthController extends Controller
         // Status cookie (encrypted automatically by Laravel)
         $statusCookie = cookie(
             'user_status',
-            $user->status, // e.g., 'active', 'suspended', 'not_verified'
+            UserStatus::NotVerified->value, // e.g., 'active', 'suspended', 'not_verified'
+            60 * 24 * 7,
+            '/',
+            null,
+            true,
+            true,
+            false,
+            'Lax'
+        );
+
+        return ApiResponse::success(['user' => $user], 'User created successfully', 201)->withCookie($cookie)->withCookie($statusCookie);
+    }
+    public function registerArtisan(Request $request)
+    {
+        $userData = ApiResponse::validate($request->all(), [
+            'full_name'     => 'required|string|max:255',
+            'email' => 'nullable|email|unique:users,email',
+            'phone' => 'required|string|unique:users,phone|max:15',
+            'password' => 'required|min:8',
+            'city' => 'required|string',
+        ]);
+
+        $artisanData = ApiResponse::validate($request->all(), [
+            'profession' => 'required|string',
+            'skills' => 'required|array'
+        ]);
+
+
+
+        $userData['role'] = UserRoles::Artisan->value;
+        $userData['password'] = Hash::make($userData['password']);
+        $user = User::create($userData);
+
+        // create the artisan
+        $artisan = $user->artisan()->create($artisanData);
+
+        // Generate phone verification code
+        $code = rand(100000, 999999);
+
+        $user->verifications()->create([
+            'type' => UserVerification::TYPE_PHONE,
+            'code' => $code,
+            'expires_at' => now()->addMinutes(5),
+        ]);
+
+        // Send SMS via Twilio
+
+        $token = $user->createToken('apptoken');
+        $token->accessToken->expires_at = now()->addDays(7); // 7 days expiry
+        $token->accessToken->save();
+
+        $plainTextToken = $token->plainTextToken;
+        $cookie = cookie(
+            'token',
+            $plainTextToken,
+            60 * 24 * 7,
+            '/',       // path
+            null,      // domain must be null for localhost
+            true,      // secure
+            true,      // httpOnly
+            false,
+            'Lax'
+        );
+        // Status cookie (encrypted automatically by Laravel)
+        $statusCookie = cookie(
+            'user_status',
+            UserStatus::NotVerified->value, // e.g., 'active', 'suspended', 'not_verified'
             60 * 24 * 7,
             '/',
             null,

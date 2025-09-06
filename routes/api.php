@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Artisan;
 |
 */
 
+Route::post('/register-artisan', [AuthController::class, 'registerArtisan']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login',    [AuthController::class, 'login']);
 Route::get('/artisans', [ArtisanController::class, 'index']);

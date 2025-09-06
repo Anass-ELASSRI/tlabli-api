@@ -21,8 +21,7 @@ class Artisan extends Model implements HasMedia
     {
         $this->addMediaCollection('identity_docs')->singleFile();
         $this->addMediaCollection('profile_picture')->singleFile();
-        $this->addMediaCollection('legal_docs');
-        $this->addMediaCollection('past_projects');
+        $this->addMediaCollection('certifications');
     }
 
 
@@ -32,23 +31,7 @@ class Artisan extends Model implements HasMedia
      *
      * @var string
      */
-    const LEGAL_STATUS_UNVERIFIED = 1;
-    const LEGAL_STATUS_COMPANY = 2;
-    const LEGAL_STATUS_AUTO_ENTREPRENEUR = 3;
 
-
-    const STEP_BASIC_INFO = 1;
-    const STEP_DOCS = 2;
-    const STEP_COMPLETE = 3;
-
-
-    /**
-     * User status account.
-     */
-    const PROFILE_INCOMPLETE = 1;
-    const PROFILE_COMPLETE = 2;
-    const PROFILE_APPROVED = 3;
-    const PROFILE_REJECTED = 4;
     /**
      * The attributes that are mass assignable.
      *
@@ -57,31 +40,28 @@ class Artisan extends Model implements HasMedia
     protected $fillable = [
         'profession',
         'skills',
-        'phone',
-        'legal_status',
-        'status',
+        'contact',
         'user_id',
-        'current_step',
         'experience_years',
-        'city',
+        'contact',
         'languages',
-        'social_links',
-        'bio',
-        'rating',
     ];
 
+    protected $casts = [
+        'skills' => 'array'
+    ];
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function requests()
-    {
-        return $this->hasMany(ArtisanRequest::class);
-    }
+    // public function requests()
+    // {
+    //     return $this->hasMany(ArtisanRequest::class);
+    // }
 
-    public function hasPendingRequestFrom($client)
-    {
-        return $this->requests()->where('user_id', $client->id)->whereIn('status', ArtisanRequest::WORK_IN_STATUS)->exists();
-    }
+    // public function hasPendingRequestFrom($client)
+    // {
+    //     return $this->requests()->where('user_id', $client->id)->whereIn('status', ArtisanRequest::WORK_IN_STATUS)->exists();
+    // }
 }
