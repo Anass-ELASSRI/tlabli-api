@@ -8,6 +8,7 @@ use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\UserVerification;
+use Firebase\JWT\JWT;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
@@ -41,15 +42,24 @@ class AuthController extends Controller
             return ApiResponse::error('invalid_credentials', 401);
         }
 
-        $token = $user->createToken('apptoken');
-        $token->accessToken->expires_at = now()->addDays(7); // 7 days expiry
-        $token->accessToken->save();
+        // $token = $user->createToken('apptoken');
+        // $token->accessToken->expires_at = now()->addDays(7); // 7 days expiry
+        // $token->accessToken->save();
+        // $plainTextToken = $token->plainTextToken;
+
+        $payload = [
+            'sub'    => $user->id,          // subject e.g. user ID
+            'role'   => $user->role->value,      // e.g. "admin"
+            'status' => $user->status->value,    // e.g. "active" | "notVerified"
+            'exp'    => time() + 60 * 15, // short expiry (15 minutes)
+        ];
+
+        $jwt = JWT::encode($payload, env('JWT_SECRET'), 'HS256');
 
 
-        $plainTextToken = $token->plainTextToken;
         $cookie = cookie(
-            'token',
-            $plainTextToken,
+            'apptoken',
+            $jwt,
             60 * 24 * 7,
             '/',       // path
             null,      // domain must be null for localhost
@@ -58,19 +68,7 @@ class AuthController extends Controller
             false,
             'Lax'
         );
-        // Status cookie (encrypted automatically by Laravel)
-        $statusCookie = cookie(
-            'user_status',
-            $user->status->value, // e.g., 'active', 'suspended', 'not_verified'
-            60 * 24 * 7,
-            '/',
-            null,
-            true,
-            true,
-            false,
-            'Lax'
-        );
-        return ApiResponse::success(['status' => $user->status], 'Logged in successfully', 200)->withCookie($cookie)->withCookie($statusCookie);
+        return ApiResponse::success(['status' => $user->status], 'Logged in successfully', 200)->withCookie($cookie);
     }
 
     public function logout(Request $request)

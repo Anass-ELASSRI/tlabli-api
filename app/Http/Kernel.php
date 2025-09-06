@@ -45,7 +45,9 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\InjectTokenFromCookie::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \Illuminate\Routing\Middleware\ThrottleRequests::class . ':api',
+
         ],
+        'jwt' => \App\Http\Middleware\JwtMiddleware::class,
     ];
 
     /**

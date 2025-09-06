@@ -25,6 +25,15 @@ Route::get('/artisans', [ArtisanController::class, 'index']);
 Route::get('/artisans/{id}', [ArtisanController::class, 'show']);
 Route::get('/test', [ArtisanController::class, 'test']);
 
+
+
+Route::middleware(['jwt'])->group(function () {
+    Route::get('/me',    [AuthController::class, 'me']);
+});
+
+
+
+
 Route::middleware('auth:sanctum')->group(function () {
 
     // verify phone
