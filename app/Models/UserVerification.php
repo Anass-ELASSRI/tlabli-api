@@ -8,16 +8,22 @@ use Illuminate\Database\Eloquent\Model;
 class UserVerification extends Model
 {
     use HasFactory;
-    
+
     const TYPE_PHONE = 'phone';
     const TYPE_EMAIL = 'email';
     const TYPE_2FA = '2fa';
 
 
-
+    protected $casts = [
+        'expires_at' => 'datetime',
+    ];
 
     protected $fillable = [
-        'type', 'code', 'attempts', 'last_attempt_at', 'expires_at'
+        'type',
+        'code',
+        'attempts',
+        'last_attempt_at',
+        'expires_at'
     ];
 
     public function user()

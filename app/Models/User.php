@@ -2,21 +2,18 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-
 use App\Enums\UserRoles;
 use App\Enums\UserStatus;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Str;
 
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasFactory, Notifiable;
 
     public $incrementing = false; // UUID is not auto-incrementing
     protected $keyType = 'string'; // Key is a string, not integer
@@ -47,7 +44,6 @@ class User extends Authenticatable
         'city',
         'is_verified',
         'is_deleted',
-        'refresh_token'
     ];
 
     /**
@@ -102,7 +98,7 @@ class User extends Authenticatable
     {
         return $this->is_verified;
     }
-    
+
     public function verifications()
     {
         return $this->hasMany(UserVerification::class);
@@ -111,5 +107,10 @@ class User extends Authenticatable
     public function phoneVerification()
     {
         return $this->hasOne(UserVerification::class)->where('type', 'phone');
+    }
+
+    public function tokens()
+    {
+        return $this->hasMany(UserToken::class);
     }
 }

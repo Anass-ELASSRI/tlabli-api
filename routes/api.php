@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\ArtisanController;
 use App\Http\Controllers\API\ArtisanRequestController;
-use Illuminate\Support\Facades\Artisan;
+use App\Http\Controllers\Auth\RefreshController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,29 +18,29 @@ use Illuminate\Support\Facades\Artisan;
 |
 */
 
-Route::post('/register-artisan', [AuthController::class, 'registerArtisan']);
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login',    [AuthController::class, 'login']);
-Route::get('/artisans', [ArtisanController::class, 'index']);
-Route::get('/artisans/{id}', [ArtisanController::class, 'show']);
+Route::middleware(['silent.refresh'])->group(function () {
+    // any other guest pages you want to silently redirect
+    Route::post('/register-artisan', [AuthController::class, 'registerArtisan']);
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::get('/artisans', [ArtisanController::class, 'index']);
+    Route::get('/artisans/{id}', [ArtisanController::class, 'show']);
+    Route::post('/login',    [AuthController::class, 'login']);
+});
+
+
 Route::get('/test', [ArtisanController::class, 'test']);
 
 
 
 Route::middleware(['jwt'])->group(function () {
     Route::get('/me',    [AuthController::class, 'me']);
-
-    Route::post('/refresh', [AuthController::class, 'refresh']);
-
-
-
+    Route::post('/auth/refresh', [RefreshController::class, 'refresh']);
     Route::post('/verify-phone', [PhoneVerificationController::class, 'verify']);
     Route::post('/resend-code', [PhoneVerificationController::class, 'resend']);
-    Route::post('/verify-account', [AuthController::class, 'verifyAccount'])->name('verification.account');
 
 
     Route::post('/logout', [AuthController::class, 'logout']);
-    Route::post('/complete-registration', [ArtisanController::class, 'completeRegistration']);
+    Route::post('/complete-profile', [ArtisanController::class, 'completeRegistration']);
     // Route::get('/profile', [userC::class, 'profile']);
 
     Route::prefix('artisans')->group(function () {

@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Enums\UserRoles;
+use App\Enums\UserStatus;
 use App\Helpers\ApiResponse;
+use App\Helpers\CookiesHelper;
+use App\Helpers\JWTHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ArtisanResource;
 use App\Models\Artisan;
 use App\Models\User;
-use App\Services\ArtisanService;
 use Illuminate\Http\Request;
-use Laravel\Sanctum\PersonalAccessToken;
 
 class ArtisanController extends Controller
 {
@@ -19,11 +21,41 @@ class ArtisanController extends Controller
         return ApiResponse::success($artisans, 'Artisan retrieved successfully', 200);
     }
 
-    public function completeRegistration(ArtisanService $ArtisanService, Request $request)
+    public function completeRegistration(Request $request)
     {
-        $response = $ArtisanService->handleProfileStep($request);
+        $NOT_ALLOWED_STATUS = [UserStatus::NotVerified, UserStatus::ProfilePending];
 
-        return $response;
+        $user = $request->user();
+        $artisan = $user->artisan;
+        if ($user->role != UserRoles::Artisan || !$artisan) {
+            return ApiResponse::error('Unauthorized action.', 400);
+        }
+        if ($user->status == UserStatus::Active) {
+            return ApiResponse::error('Artisan profile is already complete', 400);
+        }
+        if (in_array($user->status, $NOT_ALLOWED_STATUS)) {
+            return ApiResponse::error('Unauthorized action.', 400);
+        }
+        $data = ApiResponse::validate($request->all(), [
+            'experience_years' => 'required|integer|min:1',
+            'languages'     => 'required|array',
+            'contact' => 'required|array',
+            'certifications' => 'required|array',
+        ]);
+
+        $artisan->update($data);
+        $user->update(['status' => UserStatus::ProfilePending]);
+        $cookieHelper = new CookiesHelper();
+        $JWThelper = new JWTHelper();
+
+        $accessToken = $JWThelper->generateJwt($user, 60 * 15);
+        $cookie_access_token = $cookieHelper->generateCookie(
+            'access_token',
+            $accessToken,
+            15
+        );
+
+        return ApiResponse::success(null, 'profile completed')->withCookie($cookie_access_token);
     }
 
 

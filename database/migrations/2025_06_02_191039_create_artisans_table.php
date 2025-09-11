@@ -18,7 +18,7 @@ return new class extends Migration
             $table->json('skills');
             $table->unsignedTinyInteger('experience_years')->nullable();;
             $table->foreignUuid('user_id')->constrained('users');
-            $table->json('languages')->nullable();;
+            $table->json('languages')->nullable();
             $table->json('certifications')->nullable();
             $table->json('contact')->nullable();
             // $table->text('bio')->nullable();

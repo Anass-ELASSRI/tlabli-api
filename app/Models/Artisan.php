@@ -45,10 +45,15 @@ class Artisan extends Model implements HasMedia
         'experience_years',
         'contact',
         'languages',
+        'certifications'
     ];
 
+
     protected $casts = [
-        'skills' => 'array'
+        'skills' => 'array',
+        'languages' => 'array',
+        'certifications' => 'array',
+        'contact' => 'array'
     ];
     public function user()
     {

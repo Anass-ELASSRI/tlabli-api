@@ -36,18 +36,16 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
-            \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
 
         ],
         'api' => [
-            // \Illuminate\Session\Middleware\StartSession::class,
-            // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-            \App\Http\Middleware\InjectTokenFromCookie::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \Illuminate\Routing\Middleware\ThrottleRequests::class . ':api',
 
         ],
-        'jwt' => [\App\Http\Middleware\JwtMiddleware::class]
+        'jwt' => [
+            \App\Http\Middleware\JwtMiddleware::class,
+        ]
     ];
 
     /**
@@ -70,5 +68,6 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
         'permission' => \App\Http\Middleware\CheckPermission::class,
+        'silent.refresh' => \App\Http\Middleware\SilentRefreshMiddleware::class,
     ];
 }
