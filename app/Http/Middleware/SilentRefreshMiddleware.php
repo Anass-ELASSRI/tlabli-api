@@ -20,6 +20,7 @@ class SilentRefreshMiddleware
         $cookieHelper = new CookiesHelper();
         $jwtHelper    = new JWTHelper();
 
+        
         // If access token is missing or expired but refresh exists → refresh silently
         if ($refreshToken && (!$accessToken || $this->isExpired($accessToken))) {
             $record = UserToken::where('refresh_token', hash('sha256', $refreshToken))

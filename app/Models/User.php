@@ -42,7 +42,8 @@ class User extends Authenticatable
         'phone',
         'status',
         'city',
-        'is_verified',
+        'phone_verified_at',
+        'email_verified_at',
         'is_deleted',
     ];
 
@@ -53,7 +54,8 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
-        'verified_at',
+        'phone_verified_at',
+        'email_verified_at',
         'is_deleted',
         'is_verified'
     ];
@@ -112,5 +114,9 @@ class User extends Authenticatable
     public function tokens()
     {
         return $this->hasMany(UserToken::class);
+    }
+    public function isSuspended()
+    {
+        return $this->status == UserStatus::Suspended;
     }
 }

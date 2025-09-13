@@ -20,8 +20,8 @@ return new class extends Migration
             $table->string('email')->nullable()->unique();
             $table->string('role')->default(\App\Enums\UserRoles::Client->value);
             $table->string('password');
-            $table->boolean('is_verified')->default(false);
-            $table->timestamp('verified_at')->nullable();
+            $table->timestamp('phone_verified_at')->nullable();
+            $table->timestamp('email_verified_at')->nullable();
             $table->boolean('is_deleted')->default(false);
             $table->string('status')->default(\App\Enums\UserStatus::NotVerified->value);
             $table->timestamps();

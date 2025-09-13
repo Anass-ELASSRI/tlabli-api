@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\accountVerificatiom\PhoneVerificationController;
+use App\Http\Controllers\AccountVerification\PhoneVerificationController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\ArtisanController;
@@ -28,13 +28,13 @@ Route::middleware(['silent.refresh'])->group(function () {
 });
 
 
+
 Route::get('/test', [ArtisanController::class, 'test']);
-
-
 
 Route::middleware(['jwt'])->group(function () {
     Route::get('/me',    [AuthController::class, 'me']);
     Route::post('/auth/refresh', [RefreshController::class, 'refresh']);
+    Route::get('/verify-phone/status', [PhoneVerificationController::class, 'status']);
     Route::post('/verify-phone', [PhoneVerificationController::class, 'verify']);
     Route::post('/resend-code', [PhoneVerificationController::class, 'resend']);
 

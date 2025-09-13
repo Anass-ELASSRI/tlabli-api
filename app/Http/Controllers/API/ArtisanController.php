@@ -110,8 +110,8 @@ class ArtisanController extends Controller
 
     public function test(Request $request)
     {
-        $cookies = $request->cookies->all();
-        $header = $request->header();
-        return ApiResponse::success(['cookies' => $cookies, 'header' => $header], 'Test successful', 200);
+        $currentLocale = app()->getLocale();
+        $message = __('messages.test');
+        return ApiResponse::success(['currentLocale' => $currentLocale, 'message' => $message], 'Test successful', 200);
     }
 }

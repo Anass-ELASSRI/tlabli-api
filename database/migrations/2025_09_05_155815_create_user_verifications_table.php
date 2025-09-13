@@ -20,6 +20,8 @@ return new class extends Migration
             $table->integer('attempts')->default(0);
             $table->timestamp('last_attempt_at')->nullable();
             $table->timestamp('expires_at')->nullable();
+            $table->unsignedInteger('send_count')->default(1);
+
             $table->timestamps();
         });
     }

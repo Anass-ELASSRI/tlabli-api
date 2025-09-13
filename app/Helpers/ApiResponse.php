@@ -21,9 +21,8 @@ class ApiResponse
             'success' => false,
             'message' => $message,
         ];
-        if ($errors) {
-            $response['errors'] = $errors;
-        }
+        if ($errors) $response['errors'] = $errors;
+
         return response()->json($response, $code);
     }
     public static function validate(array $data, array $rules)
