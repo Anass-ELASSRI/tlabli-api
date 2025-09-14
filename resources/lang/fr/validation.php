@@ -116,7 +116,7 @@ return [
         ],
         'password' => [
             'min' => 'Le mot de passe doit contenir au moins :min caractères.',
-            'fr' => 'La confirmation du mot de passe ne correspond pas au mot de passe.',
+            'connfirmed' => 'La confirmation du mot de passe ne correspond pas au mot de passe.',
 
         ],
     ],
@@ -132,6 +132,8 @@ return [
         'profession' => 'Profession',
         'skills'     => 'Compétences',
         'password_confirmation'     => 'confirmation du mot de passe',
+        'social_links.whatsapp' => 'numéro de whatsapp'
+
 
     ],
 

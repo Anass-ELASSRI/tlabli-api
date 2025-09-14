@@ -103,15 +103,14 @@ class AuthController extends Controller
     public function registerArtisan(Request $request)
     {
         $validated = ApiResponse::validate($request->all(), [
-            'first_name'  => 'required|string|min:2|max:100',
-            'last_name'   => 'required|string|min:2|max:100',
+            'first_name'  => 'required|string|min:2|max:50',
+            'last_name'   => 'required|string|min:2|max:50',
             'email'       => 'nullable|email|unique:users,email',
             'phone'       => 'required|string|unique:users,phone|max:15',
             'password'    => 'required|min:8|confirmed',
-            'password_confirmation' => 'required',
+            'password_confirmation' => 'required|min:8',
             'city'        => 'required|string',
             'profession'  => 'required|string',
-            'skills'      => 'required|array',
         ]);
 
         // Prepare user data

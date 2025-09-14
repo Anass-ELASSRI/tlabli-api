@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class UserVerification extends Model
 {
     use HasFactory;
+    
     const TYPE_PHONE = 'phone';
     const TYPE_EMAIL = 'email';
     const TYPE_2FA = '2fa';

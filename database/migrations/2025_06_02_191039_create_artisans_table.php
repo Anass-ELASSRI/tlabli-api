@@ -14,18 +14,18 @@ return new class extends Migration
     {
         Schema::create('artisans', function (Blueprint $table) {
             $table->id();
-            $table->string('profession');
+            $table->foreignId('profession_id')
+                ->constrained('professions');
             $table->json('skills');
             $table->unsignedTinyInteger('experience_years')->nullable();;
             $table->foreignUuid('user_id')->constrained('users');
-            $table->json('languages')->nullable();
+            $table->json('social_links')->nullable(); // e.g. {"facebook": "...", "instagram": "..."}
             $table->json('certifications')->nullable();
-            $table->json('contact')->nullable();
+            $table->string('location')->nullable();
             // $table->text('bio')->nullable();
             // $table->unsignedTinyInteger('legal_status')->default(Artisan::LEGAL_STATUS_UNVERIFIED);
             // $table->unsignedTinyInteger('current_step');
             // $table->unsignedTinyInteger('status')->default(Artisan::PROFILE_INCOMPLETE);
-            // $table->json('social_links')->nullable(); // e.g. {"facebook": "...", "instagram": "..."}
             // $table->decimal('rating', 3, 2)->default(0);
             $table->timestamps();
         });

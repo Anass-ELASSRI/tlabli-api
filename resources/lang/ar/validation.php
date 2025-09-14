@@ -126,11 +126,14 @@ return [
         'email'      => 'البريد الإلكتروني',
         'phone'      => 'رقم الهاتف',
         'password'   => 'كلمة المرور',
+        'password_confirmation'     => 'تأكيد كلمة المرور',
         'city'       => 'المدينة',
         'role'       => 'الدور',
+
+        // artisan information
         'profession' => 'المهنة',
         'skills'     => 'المهارات',
-        'password_confirmation'     => 'تأكيد كلمة المرور',
+        'social_links.whatsapp' => 'رقم واتساب'
 
     ],
 

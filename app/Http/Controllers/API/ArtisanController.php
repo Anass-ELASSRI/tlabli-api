@@ -28,34 +28,37 @@ class ArtisanController extends Controller
         $user = $request->user();
         $artisan = $user->artisan;
         if ($user->role != UserRoles::Artisan || !$artisan) {
-            return ApiResponse::error('Unauthorized action.', 400);
+            return ApiResponse::error('Unauthorized action.', 401);
         }
         if ($user->status == UserStatus::Active) {
-            return ApiResponse::error('Artisan profile is already complete', 400);
+            return ApiResponse::error('Artisan profile is already complete', 403);
         }
         if (in_array($user->status, $NOT_ALLOWED_STATUS)) {
-            return ApiResponse::error('Unauthorized action.', 400);
+            return ApiResponse::error('Unauthorized action.', 403);
         }
         $data = ApiResponse::validate($request->all(), [
             'experience_years' => 'required|integer|min:1',
-            'languages'     => 'required|array',
-            'contact' => 'required|array',
-            'certifications' => 'required|array',
+            'location' => 'nullable|string|min:4|max:150',
+            'certifications' => 'nullable|array',
+            'certifications.*.title' => 'required_with:certifications.*.file|string|max:255',
+            'certifications.*.file'  => 'required_with:certifications.*.title|file|mimes:pdf,jpg,png|max:2048',
+            'profilePic' => 'nullable|image',  // image
+            'social_links'     => 'nullable|array',
+            'social_links.whatsapp' => 'required|string|regex:/^[0-9]+$/',
+            // 'social_links.facebook' => 'nullable|url',
+            // 'social_links.instagram' => 'nullable|url',
         ]);
 
         $artisan->update($data);
         $user->update(['status' => UserStatus::ProfilePending]);
-        $cookieHelper = new CookiesHelper();
-        $JWThelper = new JWTHelper();
 
-        $accessToken = $JWThelper->generateJwt($user, 60 * 15);
-        $cookie_access_token = $cookieHelper->generateCookie(
+        $cookie = (new CookiesHelper())->generateCookie(
             'access_token',
-            $accessToken,
-            15
+            (new JWTHelper())->generateJwt($user, 300),
+            60 * 24 * 7
         );
 
-        return ApiResponse::success(null, 'profile completed')->withCookie($cookie_access_token);
+        return ApiResponse::success(null, 'profile completed')->withCookie($cookie);
     }
 
 

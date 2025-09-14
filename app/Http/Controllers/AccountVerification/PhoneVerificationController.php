@@ -9,11 +9,21 @@ use App\Helpers\CookiesHelper;
 use App\Helpers\JWTHelper;
 use App\Http\Controllers\Controller;
 use App\Models\UserVerification;
+use App\Services\UserVerificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class PhoneVerificationController extends Controller
 {
+
+
+    protected UserVerificationService $verificationService;
+
+    public function __construct(UserVerificationService $verificationService)
+    {
+        $this->verificationService = $verificationService;
+    }
+    
     public function status(Request $request)
     {
         [$resendSeconds, $canVerify, $message] = $this->getVerificationStatus($request->user());
@@ -62,8 +72,8 @@ class PhoneVerificationController extends Controller
 
         $cookie = (new CookiesHelper())->generateCookie(
             'access_token',
-            (new JWTHelper())->generateJwt($user, 60 * 15),
-            15
+            (new JWTHelper())->generateJwt($user, 300),
+            60 * 24 * 7
         );
 
         return ApiResponse::success(['status' => $status], __('auth.phone_verified_successfully'))->withCookie($cookie);

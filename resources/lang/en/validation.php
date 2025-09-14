@@ -138,7 +138,7 @@ return [
         ],
         'password' => [
             'min' => 'Password must be at least :min characters.',
-            'en' => 'The password confirmation does not match.',
+            'confirmed' => 'The password confirmation does not match.',
         ],
     ],
 
@@ -154,6 +154,8 @@ return [
     */
 
     'attributes' => [
+
+        // user inputs 
         'first_name'  => 'Firsrt name',
         'last_name'  => 'last name',
         'email'      => 'Email',
@@ -164,6 +166,15 @@ return [
         'profession' => 'Profession',
         'skills'     => 'Skills',
         'password_confirmation'     => 'password confirmation',
+
+        // artisan inputs
+        'profilePic' => 'profile picture',
+        'certifications' => 'certifications',
+        'contact' => 'contact',
+        'experience_years' => 'experience_years',
+        'languages' => 'languages',
+        'password_confirmation'     => 'password confirmation',
+        'social_links.whatsapp' => 'whatsapp number'
     ],
 
 ];

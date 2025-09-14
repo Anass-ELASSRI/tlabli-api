@@ -17,11 +17,11 @@ return new class extends Migration
             $table->foreignUuid('user_id')->constrained('users');
             $table->string('type')->default(UserVerification::TYPE_PHONE); // 'phone', 'email', '2fa'
             $table->string('code');
-            $table->integer('attempts')->default(0);
+            $table->unsignedInteger('attempts')->default(0);
             $table->timestamp('last_attempt_at')->nullable();
-            $table->timestamp('expires_at')->nullable();
+            $table->timestamp('expires_at');
             $table->unsignedInteger('send_count')->default(1);
-
+            $table->json('meta')->nullable();
             $table->timestamps();
         });
     }

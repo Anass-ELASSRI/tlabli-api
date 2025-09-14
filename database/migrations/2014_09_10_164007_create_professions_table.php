@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('ar');      // Arabic name
             $table->string('fr');      // French name
             $table->string('en');      // English name
-            $table->string('value');   // slug or identifier
+            $table->string('slug')->unique();   // slug or identifier
             $table->timestamps();
         });
     }
